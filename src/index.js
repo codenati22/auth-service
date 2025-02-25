@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { signup, login } = require("./handlers/auth");
+const { signup, login, verify } = require("./handlers/auth");
 
 const app = express();
 app.use(express.json());
@@ -22,6 +22,7 @@ connectDB();
 
 app.post("/signup", signup);
 app.post("/login", login);
+app.post("/verify", verify);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Auth service running on port ${PORT}`));

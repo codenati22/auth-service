@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -19,4 +18,12 @@ const generateToken = (user) => {
   );
 };
 
-module.exports = { hashPassword, comparePassword, generateToken };
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    throw new Error("Invalid or expired token");
+  }
+};
+
+module.exports = { hashPassword, comparePassword, generateToken, verifyToken };

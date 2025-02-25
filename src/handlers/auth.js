@@ -3,6 +3,7 @@ const {
   hashPassword,
   comparePassword,
   generateToken,
+  verifyToken,
 } = require("../utils/auth");
 
 const signup = async (req, res) => {
@@ -18,7 +19,9 @@ const signup = async (req, res) => {
     await user.save();
 
     const token = generateToken(user);
-    res.status(201).json({ token });
+    res
+      .status(201)
+      .json({ token, user: { id: user._id, username: user.username } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -34,10 +37,23 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user);
-    res.status(200).json({ token });
+    res
+      .status(200)
+      .json({ token, user: { id: user._id, username: user.username } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { signup, login };
+const verify = (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const decoded = verifyToken(token);
+    res.status(200).json({ valid: true, user: decoded });
+  } catch (error) {
+    res.status(401).json({ valid: false, error: error.message });
+  }
+};
+
+module.exports = { signup, login, verify };
