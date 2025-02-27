@@ -1,9 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const { signup, login, verify } = require("./handlers/auth");
 require("dotenv").config();
 
 const app = express();
+app.use(
+  cors({
+    origin: "https://frontend-service-ykmr.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 const connectDB = async () => {
